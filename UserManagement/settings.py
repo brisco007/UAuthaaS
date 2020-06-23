@@ -155,7 +155,7 @@ KEYCLOAK_USER_AUTHORIZATION_EXEMPT_PATHS = [
 
 CONFIG_DIR = os.path.join(os.path.dirname(__file__), os.pardir)
 
-KEYCLOAK_CONFIG = {
+KEYCLOAK_IAM_CLIENT_CONFIG = {
     'KEYCLOAK_REALM': 'ineat-realm',
     'KEYCLOAK_CLIENT_ID': 'base-client',
     'KEYCLOAK_DEFAULT_ACCESS': 'ALLOW',  # DENY or ALLOW
@@ -165,6 +165,23 @@ KEYCLOAK_CONFIG = {
     'KEYCLOAK_CLIENT_SECRET_KEY': '47b1e985-372b-4b46-8963-8b6c9aba0048',
 }
 
-KEYCLOAK_LOGIN_LOGOUT_CLIENT_CONFIG = {
-    
+#public client
+KEYCLOAK_WEB_CONFIG = {
+    'KEYCLOAK_REALM': 'ineat-realm',
+    'KEYCLOAK_CLIENT_ID': 'token-client',
+    'KEYCLOAK_DEFAULT_ACCESS': 'ALLOW',  # DENY or ALLOW
+    'KEYCLOAK_AUTHORIZATION_CONFIG': os.path.join(CONFIG_DIR, 'authorization-config.json'),
+    'KEYCLOAK_METHOD_VALIDATE_TOKEN': 'DECODE',
+    'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth/',
+}
+
+
+
+#public client
+KEYCLOAK_ADMIN_CONFIG = {
+    'KEYCLOAK_REALM': 'master',
+    "KEYCLOAK_USERNAME" : 'kritikos',
+    "KEYCLOAK_PASSWORD" : "Programmation12",
+    'KEYCLOAK_METHOD_VALIDATE_TOKEN': 'DECODE',
+    'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth/',
 }

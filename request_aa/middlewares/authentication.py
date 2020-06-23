@@ -17,7 +17,7 @@ class AuthentificationMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
         # One-time configuration and initialization.
-        self.config = settings.KEYCLOAK_CONFIG
+        self.config = settings.KEYCLOAK_IAM_CLIENT_CONFIG
         try:
             self.server_url = self.config['KEYCLOAK_SERVER_URL']
             self.client_id = self.config['KEYCLOAK_CLIENT_ID']

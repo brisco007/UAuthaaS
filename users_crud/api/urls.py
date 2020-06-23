@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from users_crud.api.views import DeviceTypeView, DeviceView, UserProfilView
+from users_crud.api.views import DeviceTypeView, DeviceView, UserProfilView , LoginAPI
 
 
 router = DefaultRouter()
