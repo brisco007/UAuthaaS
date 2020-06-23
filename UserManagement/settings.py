@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users_crud',
+    'request_aa',
     'rest_framework',
 ]
 
@@ -161,4 +163,8 @@ KEYCLOAK_CONFIG = {
     'KEYCLOAK_METHOD_VALIDATE_TOKEN': 'DECODE',
     'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth/',
     'KEYCLOAK_CLIENT_SECRET_KEY': '47b1e985-372b-4b46-8963-8b6c9aba0048',
+}
+
+KEYCLOAK_LOGIN_LOGOUT_CLIENT_CONFIG = {
+    
 }
