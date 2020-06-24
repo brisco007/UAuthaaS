@@ -54,5 +54,20 @@ class SignupAPI(generics.GenericAPIView):
     """ create users .. following representation designed by keyclaok """
 
     def post(self, request, *args, **kwargs):
-        #keycloak_admin.create_user(payload=request.data)
-        pass
+        credentials = request.data.copy()
+        credentials['enabled'] = True
+        try:
+            new_user = keycloak_admin.create_user(payload=credentials)
+            profile = UserProfil.objects.get_or_create(keycloak_id=new_user)
+            profile_data = UserProfilSerializer(profile).data
+            response_data = {}
+            response_data['id'] = new_user
+            response_data['profile'] = profile_data
+
+            return response.Response(response_data, status=status.HTTP_201_CREATED)
+
+        except KeycloakError as e:
+            error_data = KeyCloakErrorSerializer(e).data
+            return response.Response(
+                error_data, status=error_data["response_code"])
+

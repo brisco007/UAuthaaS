@@ -5,6 +5,7 @@ import ast
 
 # keycloak error
 
+
 class KeyCloakErrorSerializer:
 
     def __init__(self, error):
@@ -14,10 +15,17 @@ class KeyCloakErrorSerializer:
     def data(self):
         data = {
             "response_code": self.error.response_code,
-            "error_message": ast.literal_eval(self.error.error_message.decode('UTF-8')),
         }
+        if getattr(self.error, "error_message", None) is not None:
+
+            try:
+                error_message = ast.literal_eval(
+                    self.error.error_message.decode('UTF-8'))
+            except:
+                error_message = self.error.error_message.decode('UTF-8')
+            data["error_message"] = error_message
         if getattr(self.error, "message_body", None) is not None:
-            data["message_body"] = ast.literal_eval(self.error.message_body.decode('UTF-8'))
+            data["message_body"] = self.error.message_body.decode('UTF-8')
         return data
 
 # login

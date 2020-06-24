@@ -50,6 +50,7 @@ class AuthorizationMiddleware:
 
         # Code to be executed for each request/response after
         # the view is called.
+        
 
         return response
 

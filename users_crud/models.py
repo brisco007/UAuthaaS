@@ -6,7 +6,8 @@ import uuid
 
 class UserProfil(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    profil = models.ImageField(upload_to='profiles')
+    keycloak_id = models.CharField(max_length=255 , null=False , blank=False , default=uuid.uuid4)
+    #profil = models.ImageField(upload_to='profiles')
     enabled = models.BooleanField(default=True)
 
 
