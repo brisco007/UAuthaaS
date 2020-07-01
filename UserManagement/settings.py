@@ -25,7 +25,7 @@ SECRET_KEY = '06kcdzbvo-n_+k4_3)j_#+p57j*kcwdstcm(+cceawdaw6*iq#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -143,15 +143,17 @@ REST_FRAMEWORK = {
 KEYCLOAK_BEARER_AUTHENTICATION_EXEMPT_PATHS = [
     'admin',
     'auth',
-    'access',
+    'refresh',
 ]
 
 KEYCLOAK_USER_AUTHORIZATION_EXEMPT_PATHS = [
     'accounts',
     'admin',
     'auth',
-    'access',
+    'refresh',
 ]
+
+ACCESS_REQUEST_PATH = "access"
 
 CONFIG_DIR = os.path.join(os.path.dirname(__file__), os.pardir)
 

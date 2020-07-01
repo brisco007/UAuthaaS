@@ -26,5 +26,5 @@ def redirect_view(request):
         return JsonResponse({"detail": NotFound.default_detail},
                             status=NotFound.status_code)
 
-    #params['token'] = request.authorization_token
+    params['token'] = request.authorization_token
     return redirect(to=to[0], permanent=True, **params)
