@@ -25,7 +25,7 @@ SECRET_KEY = '06kcdzbvo-n_+k4_3)j_#+p57j*kcwdstcm(+cceawdaw6*iq#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users_crud',
+    'request_aa',
     'rest_framework',
     'aaa_services'
 ]
@@ -149,19 +151,21 @@ REST_FRAMEWORK = {
 KEYCLOAK_BEARER_AUTHENTICATION_EXEMPT_PATHS = [
     'admin',
     'auth',
-    'access',
+    'refresh',
 ]
 
 KEYCLOAK_USER_AUTHORIZATION_EXEMPT_PATHS = [
     'accounts',
     'admin',
     'auth',
-    'access',
+    'refresh',
 ]
+
+ACCESS_REQUEST_PATH = "access"
 
 CONFIG_DIR = os.path.join(os.path.dirname(__file__), os.pardir)
 
-KEYCLOAK_CONFIG = {
+KEYCLOAK_IAM_CLIENT_CONFIG = {
     'KEYCLOAK_REALM': 'ineat-realm',
     'KEYCLOAK_CLIENT_ID': 'base-client',
     'KEYCLOAK_DEFAULT_ACCESS': 'ALLOW',  # DENY or ALLOW
@@ -169,4 +173,32 @@ KEYCLOAK_CONFIG = {
     'KEYCLOAK_METHOD_VALIDATE_TOKEN': 'DECODE',
     'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth/',
     'KEYCLOAK_CLIENT_SECRET_KEY': '47b1e985-372b-4b46-8963-8b6c9aba0048',
+}
+
+#public client
+KEYCLOAK_WEB_CONFIG = {
+    'KEYCLOAK_REALM': 'ineat-realm',
+    'KEYCLOAK_CLIENT_ID': 'token-client',
+    'KEYCLOAK_DEFAULT_ACCESS': 'ALLOW',  # DENY or ALLOW
+    'KEYCLOAK_AUTHORIZATION_CONFIG': os.path.join(CONFIG_DIR, 'authorization-config.json'),
+    'KEYCLOAK_METHOD_VALIDATE_TOKEN': 'DECODE',
+    'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth/',
+}
+
+
+
+#public client
+KEYCLOAK_ADMIN_CONFIG = {
+    'KEYCLOAK_REALM': 'master',
+    "KEYCLOAK_USERNAME" : 'kritikos',
+    "KEYCLOAK_PASSWORD" : "Programmation12",
+    'KEYCLOAK_METHOD_VALIDATE_TOKEN': 'DECODE',
+    'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth/',
+}
+
+
+CUSTOM_ERRORS_TEXT = {   
+    'REFRESH_TOKEN' : 'REFRESH_TOKEN',
+    'AUTORIZATION_FAILLED' : 'AUTORIZATION_FAILLED',
+    'AUTHENTIFICATION_FAILLED' : 'AUTHENTIFICATION_FAILLED'
 }

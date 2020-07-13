@@ -19,7 +19,7 @@ class AuthorizationMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
         # One-time configuration and initialization.
-        self.config = settings.KEYCLOAK_CONFIG
+        self.config = settings.KEYCLOAK_IAM_CLIENT_CONFIG
         try:
             self.client_id = self.config['KEYCLOAK_CLIENT_ID']
         except KeyError:
@@ -50,6 +50,7 @@ class AuthorizationMiddleware:
 
         # Code to be executed for each request/response after
         # the view is called.
+        
 
         return response
 
@@ -79,7 +80,8 @@ class AuthorizationMiddleware:
             request.authorization_token = authorization_token
 
         else:
-            return JsonResponse({"detail": "Vous n'etes pas authorisé. Verifiez vos Forfaits"},
+            return JsonResponse({"detail": "Vous n'etes pas authorisé. Verifiez vos Forfaits",
+            "code" : settings.CUSTOM_ERRORS_TEXT['AUTORIZATION_FAILLED']},
                                 status=NotAuthenticated.status_code)
 
         return None
