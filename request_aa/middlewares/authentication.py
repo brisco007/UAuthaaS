@@ -134,11 +134,17 @@ class AuthentificationMiddleware:
                 logger.debug('** exclude path found, skipping')
                 return None
         if 'HTTP_AUTHORIZATION' not in request.META:
-            return JsonResponse({"detail": NotAuthenticated.default_detail},
-                                status=NotAuthenticated.status_code)
-
-        auth_header = request.META.get('HTTP_AUTHORIZATION').split()
-        token = auth_header[1] if len(auth_header) == 2 else auth_header[0]
+            token_request = request.META.get('QUERY_STRING' , "")
+            initToken = token_request.split('initToken=')[-1].split("&")[0]
+            
+            if not initToken:
+                return JsonResponse({"detail": NotAuthenticated.default_detail},
+                                    status=NotAuthenticated.status_code)
+            else:
+                token = initToken
+        else:
+            auth_header = request.META.get('HTTP_AUTHORIZATION').split()
+            token = auth_header[1] if len(auth_header) == 2 else auth_header[0]
 
         try:
             user = self.keycloak.userinfo(token)

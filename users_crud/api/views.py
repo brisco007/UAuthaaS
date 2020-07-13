@@ -43,6 +43,7 @@ class DeviceTypeView(viewsets.ModelViewSet):
     queryset = DeviceType.objects.filter()
 
 
+
 class DeviceView(viewsets.ModelViewSet):
     serializer_class = DeviceSerializer
     queryset = Device.objects.filter()
@@ -158,6 +159,3 @@ class SetPasswordApi(generics.GenericAPIView):
             return response.Response(result, status=status.HTTP_200_OK)
         except KeycloakError as e:
             return keycloak_error_response(e)
-        
-        
-        
