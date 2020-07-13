@@ -14,10 +14,11 @@ logger = logging.getLogger(__name__)
 
 from datetime import datetime
 from django.shortcuts import redirect
+import base64
 
 MAX_TIME = 2 # min
 SPLIT = "&"
-REDIRECT_URL='/some/url/'
+REDIRECT_URL='http://168.168.137.247:8000/access/'
 
 class AuthentificationMiddleware:
     def __init__(self, get_response):
@@ -160,11 +161,18 @@ class AuthentificationMiddleware:
         token = request.META.get('QUERY_STRING' , '')
         if token and "token" in token:
             token = token.split("token=")[1].split("&")[0]
-        # todo : convertir le token chaine de caractere
+            token = base64.b64decode(token).decode('utf-8')
+
+        """
         token = SPLIT+token # pour que ca marche
         MAX_TIME = 10000000 # pour que ca marche
-
-        print('======================= token = ', token)
+        print('======================= 1 token = ', token)
+        token = base64.b64encode(token.encode('utf-8'))
+        print('======================= 2 token = ', token)
+        """
+        
+        
+        print('======================= 3 token = ', token)
         if token and SPLIT in token :
             _, t_minutes, _, _ = convert_time(
                     timedelta_ = datetime.now() - datetime.fromisoformat(
@@ -181,7 +189,8 @@ class AuthentificationMiddleware:
                     request_type = request.META.get('CONTENT_TYPE' , '') 
                     if request_type == "text/html":
                         token_request = request.META.get('QUERY_STRING' , "")
-                        init_token = token_request.split('initToken=')[-1].split("&")[0]
+                        init_token = token_request.split('init=')[-1].split("&")[0]
+                        print(init_token, "======================")
                         if not init_token :
                             return JsonResponse({"detail": NotAuthenticated.default_detail},
                                         status=NotAuthenticated.status_code)
@@ -205,4 +214,9 @@ class AuthentificationMiddleware:
                     
             return None
 
-
+        else :
+            """
+            return JsonResponse({"detail": NotAuthenticated.default_detail},
+                                        status=NotAuthenticated.status_code)
+            """
+            return redirect(to = REDIRECT_URL,  kwargs={"to": path})

@@ -144,7 +144,7 @@ REST_FRAMEWORK = {
 
 
 KEYCLOAK_BEARER_AUTHENTICATION_EXEMPT_PATHS = [
-   'example/'
+   
 ]
 
 CONFIG_DIR = os.path.join(os.path.dirname(__file__), os.pardir)
