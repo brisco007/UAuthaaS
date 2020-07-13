@@ -5,7 +5,6 @@ from rest_framework.serializers import Serializer, CharField, ValidationError
 from django.conf import settings
 from rest_framework.exceptions import NotFound
 from django.http.response import JsonResponse
-# Create your views here.
 from keycloak import KeycloakOpenID
 from keycloak.exceptions import KeycloakConnectionError
 

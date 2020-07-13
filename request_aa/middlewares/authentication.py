@@ -6,7 +6,7 @@ from django.http.response import JsonResponse
 from django.utils.deprecation import MiddlewareMixin
 from keycloak import KeycloakOpenID
 from keycloak.exceptions import KeycloakInvalidTokenError,\
-    raise_error_from_response, KeycloakGetError , KeycloakAuthenticationError
+    raise_error_from_response, KeycloakGetError, KeycloakAuthenticationError
 from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
 import json
 
@@ -143,14 +143,14 @@ class AuthentificationMiddleware:
         try:
             user = self.keycloak.userinfo(token)
             request.authUser = user
-            
-        except KeycloakInvalidTokenError as e:
-            return JsonResponse({"detail": AuthenticationFailed.default_detail},
+
+        except KeycloakInvalidTokenError:
+            return JsonResponse({"detail": AuthenticationFailed.default_detail,
+                                 "code": settings.CUSTOM_ERRORS_TEXT['AUTHENTIFICATION_FAILLED']},
                                 status=AuthenticationFailed.status_code)
-        except KeycloakAuthenticationError as e:
-            return JsonResponse({"detail": "Token Expiré veuillez refresh"},
+        except KeycloakAuthenticationError:
+            return JsonResponse({"detail": "Token Expiré veuillez refresh",
+                                 "code": settings.CUSTOM_ERRORS_TEXT['REFRESH_TOKEN']},
                                 status=AuthenticationFailed.status_code)
 
         return None
-
-

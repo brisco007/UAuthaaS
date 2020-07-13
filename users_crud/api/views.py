@@ -160,3 +160,4 @@ class SetPasswordApi(generics.GenericAPIView):
             return keycloak_error_response(e)
         
         
+        

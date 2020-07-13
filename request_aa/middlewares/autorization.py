@@ -80,7 +80,8 @@ class AuthorizationMiddleware:
             request.authorization_token = authorization_token
 
         else:
-            return JsonResponse({"detail": "Vous n'etes pas authorisé. Verifiez vos Forfaits"},
+            return JsonResponse({"detail": "Vous n'etes pas authorisé. Verifiez vos Forfaits",
+            "code" : settings.CUSTOM_ERRORS_TEXT['AUTORIZATION_FAILLED']},
                                 status=NotAuthenticated.status_code)
 
         return None
