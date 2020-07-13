@@ -13,8 +13,11 @@ import json
 logger = logging.getLogger(__name__)
 
 from datetime import datetime
+from django.shortcuts import redirect
+
 MAX_TIME = 2 # min
-SPLIT = "client-id&"
+SPLIT = "&"
+REDIRECT_URL='/some/url/'
 
 class AuthentificationMiddleware:
     def __init__(self, get_response):
@@ -129,7 +132,7 @@ class AuthentificationMiddleware:
         return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):
-
+        print('=======================1')
         def convert_time(timedelta_):
             days = timedelta_.days
             hours, remainder = divmod(timedelta_.seconds, 3600)
@@ -141,44 +144,65 @@ class AuthentificationMiddleware:
             total_hours   = total_minutes/60
             total_days    = total_hours/24
             return total_seconds, total_minutes, total_hours, total_days
-        
-        if hasattr(settings, 'KEYCLOAK_BEARER_AUTHENTICATION_EXEMPT_PATHS'):
+    
+        token = ""
+        if hasattr(settings, 'KEYCLOAK_BEARER_AUTHENTICATION_EXEMPT_PATHS') and hasattr(settings, 'STATIC_URL'):
             path = request.path_info.lstrip('/')
+            FREE_URLS = settings.KEYCLOAK_BEARER_AUTHENTICATION_EXEMPT_PATHS + [settings.STATIC_URL]
 
-            if any(re.match(m, path) for m in
-                   settings.KEYCLOAK_BEARER_AUTHENTICATION_EXEMPT_PATHS):
+            if any(re.match(m, path) for m in FREE_URLS):
                 logger.debug('** exclude path found, skipping')
-                return None
+            
+                #return None
         
-        ##
         global MAX_TIME, SPLIT
-        _, t_minutes, _, _ = convert_time(
-                timedelta_ = datetime.now() - datetime.fromisoformat(
-                                                path.split(SPLIT)[1]
-                                            )
-                )
-        if t_minutes > MAX_TIME :
-            return JsonResponse({"detail": NotAuthenticated.default_detail},
-                                    status=NotAuthenticated.status_code)
-        else :
-            if 'HTTP_AUTHORIZATION' not in request.META:
+
+        token = request.META.get('QUERY_STRING' , '')
+        if token and "token" in token:
+            token = token.split("token=")[1].split("&")[0]
+        # todo : convertir le token chaine de caractere
+        token = SPLIT+token # pour que ca marche
+        MAX_TIME = 10000000 # pour que ca marche
+
+        print('======================= token = ', token)
+        if token and SPLIT in token :
+            _, t_minutes, _, _ = convert_time(
+                    timedelta_ = datetime.now() - datetime.fromisoformat(
+                                                    token.split(SPLIT)[1]
+                                                )
+                    )
+            print('======================= t_minutes = ', t_minutes)
+            
+            if t_minutes > MAX_TIME :
                 return JsonResponse({"detail": NotAuthenticated.default_detail},
-                                    status=NotAuthenticated.status_code)
-
-            auth_header = request.META.get('HTTP_AUTHORIZATION').split()
-            token = auth_header[1] if len(auth_header) == 2 else auth_header[0]
-
-            try:
-                user = self.keycloak.userinfo(token)
-                request.authUser = user
+                                        status=NotAuthenticated.status_code)
+            else :
+                if 'HTTP_AUTHORIZATION' not in request.META :
+                    request_type = request.META.get('CONTENT_TYPE' , '') 
+                    if request_type == "text/html":
+                        token_request = request.META.get('QUERY_STRING' , "")
+                        init_token = token_request.split('initToken=')[-1].split("&")[0]
+                        if not init_token :
+                            return JsonResponse({"detail": NotAuthenticated.default_detail},
+                                        status=NotAuthenticated.status_code)
+                        else :
+                            pass #? 
+                    else :
+                        return redirect(to = REDIRECT_URL,  kwargs={"to": path})
                 
-            except KeycloakInvalidTokenError as e:
-                return JsonResponse({"detail": AuthenticationFailed.default_detail},
-                                    status=AuthenticationFailed.status_code)
-            except KeycloakAuthenticationError as e:
-                return JsonResponse({"detail": "Token Expiré veuillez refresh"},
-                                    status=AuthenticationFailed.status_code)
+                auth_header = request.META.get('HTTP_AUTHORIZATION').split()
+                token = auth_header[1] if len(auth_header) == 2 else auth_header[0]
 
+                try:
+                    user = self.keycloak.userinfo(token)
+                    request.authUser = user
+                except KeycloakInvalidTokenError as e:
+                    return JsonResponse({"detail": AuthenticationFailed.default_detail},
+                                        status=AuthenticationFailed.status_code)
+                except KeycloakAuthenticationError as e:
+                    return JsonResponse({"detail": "Token Expiré veuillez refresh"},
+                                        status=AuthenticationFailed.status_code)
+                    
             return None
 
 

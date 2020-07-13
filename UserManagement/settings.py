@@ -37,9 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users_crud',
-    'request_aa',
-    'rest_framework',
     'aaa_services'
 ]
 
@@ -51,9 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'request_aa.middlewares.authentication.AuthentificationMiddleware',
-    'request_aa.middlewares.autorization.AuthorizationMiddleware',
+    'aaa_services.middleware.AuthentificationMiddleware',
 ]
 
 ROOT_URLCONF = 'UserManagement.urls'
@@ -149,52 +144,19 @@ REST_FRAMEWORK = {
 
 
 KEYCLOAK_BEARER_AUTHENTICATION_EXEMPT_PATHS = [
-    'admin',
-    'auth',
-    'refresh',
+   'example/'
 ]
-
-KEYCLOAK_USER_AUTHORIZATION_EXEMPT_PATHS = [
-    'accounts',
-    'admin',
-    'auth',
-    'refresh',
-]
-
-ACCESS_REQUEST_PATH = "access"
 
 CONFIG_DIR = os.path.join(os.path.dirname(__file__), os.pardir)
 
-KEYCLOAK_IAM_CLIENT_CONFIG = {
+KEYCLOAK_CONFIG = {
     'KEYCLOAK_REALM': 'ineat-realm',
     'KEYCLOAK_CLIENT_ID': 'base-client',
-    'KEYCLOAK_DEFAULT_ACCESS': 'ALLOW',  # DENY or ALLOW
-    'KEYCLOAK_AUTHORIZATION_CONFIG': os.path.join(CONFIG_DIR, 'authorization-config.json'),
     'KEYCLOAK_METHOD_VALIDATE_TOKEN': 'DECODE',
-    'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth/',
+    'KEYCLOAK_SERVER_URL': 'http://168.168.137.247:8080/auth/',
     'KEYCLOAK_CLIENT_SECRET_KEY': '47b1e985-372b-4b46-8963-8b6c9aba0048',
 }
 
-#public client
-KEYCLOAK_WEB_CONFIG = {
-    'KEYCLOAK_REALM': 'ineat-realm',
-    'KEYCLOAK_CLIENT_ID': 'token-client',
-    'KEYCLOAK_DEFAULT_ACCESS': 'ALLOW',  # DENY or ALLOW
-    'KEYCLOAK_AUTHORIZATION_CONFIG': os.path.join(CONFIG_DIR, 'authorization-config.json'),
-    'KEYCLOAK_METHOD_VALIDATE_TOKEN': 'DECODE',
-    'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth/',
-}
-
-
-
-#public client
-KEYCLOAK_ADMIN_CONFIG = {
-    'KEYCLOAK_REALM': 'master',
-    "KEYCLOAK_USERNAME" : 'kritikos',
-    "KEYCLOAK_PASSWORD" : "Programmation12",
-    'KEYCLOAK_METHOD_VALIDATE_TOKEN': 'DECODE',
-    'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth/',
-}
 
 
 CUSTOM_ERRORS_TEXT = {   

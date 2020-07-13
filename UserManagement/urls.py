@@ -15,19 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from request_aa.views import SalutView, redirect_view
-from users_crud.api.views import LoginAPI, SignupAPI , UserList , RefreshToken , LogoutAPI, SingleUserAPI , SetPasswordApi
+from aaa_services.views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/login', LoginAPI.as_view()),
-    path('usersinfo/', include('users_crud.api.urls')),
-    path('salut/', SalutView.as_view()),
-    path('access/', redirect_view),
-    path('auth/signup', SignupAPI.as_view()),
-    path('auth/logout', LogoutAPI.as_view()),
-    path('auth/set_password' , SetPasswordApi.as_view()),
-    path('users/' , UserList.as_view()),
-    path('users/<uuid:pk>' , SingleUserAPI.as_view()),
-    path('refresh/token' , RefreshToken.as_view()),
+    path('example/' , home),
 ]
