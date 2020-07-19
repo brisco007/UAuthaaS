@@ -22,9 +22,12 @@ class LoginAPI(generics.GenericAPIView):
             data = serializer.validated_data
             try:
                 token = keycloak_web.token(data['username'], data["password"])
+                user = keycloak_web.userinfo(token['access_token'])
                 return response.Response({
-                    "token": token
+                    "token": token,
+                    "id" : user['sub'],
                 })
+
             except KeycloakError as e:
                 error_data = KeyCloakErrorSerializer(e).data
                 return response.Response(

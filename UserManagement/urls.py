@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from request_aa.views import SalutView, redirect_view
 from users_crud.api.views import LoginAPI, SignupAPI , UserList , RefreshToken , LogoutAPI, SingleUserAPI , SetPasswordApi
-
+from product_ass.views import ServicesList
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/login', LoginAPI.as_view()),
@@ -30,4 +30,7 @@ urlpatterns = [
     path('users/' , UserList.as_view()),
     path('users/<uuid:pk>' , SingleUserAPI.as_view()),
     path('refresh/token' , RefreshToken.as_view()),
+    path('services/' , ServicesList.as_view()),
+    path('accounting/', include('biling_and_payment.urls')),
+    path('journalling/' , include('journalling.urls'))
 ]

@@ -115,6 +115,7 @@ class AuthentificationMiddleware:
         self._method_validate_token = value
 
     def __call__(self, request):
+        print("queryString",  request.META.get('QUERY_STRING', ''))
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
@@ -135,9 +136,12 @@ class AuthentificationMiddleware:
                 return None
         if 'HTTP_AUTHORIZATION' not in request.META:
             token_request = request.META.get('QUERY_STRING' , "")
-            initToken = token_request.split('initToken=')[-1].split("&")[0]
-            
-            if not initToken:
+            print('token_request' , token_request)
+            print("init =====" ,  request.GET , request.META)
+            initToken = token_request.split('init=')[-1].split("&")[0]
+            request_type = request.META.get('CONTENT_TYPE' , '')
+            print('text/html' == request_type , 'text/plain' == request_type)
+            if not initToken and not 'text/html' == request_type and not 'text/plain' == request_type:
                 return JsonResponse({"detail": NotAuthenticated.default_detail},
                                     status=NotAuthenticated.status_code)
             else:
@@ -154,7 +158,7 @@ class AuthentificationMiddleware:
             return JsonResponse({"detail": AuthenticationFailed.default_detail,
                                  "code": settings.CUSTOM_ERRORS_TEXT['AUTHENTIFICATION_FAILLED']},
                                 status=AuthenticationFailed.status_code)
-        except KeycloakAuthenticationError:
+        except KeycloakAuthenticationError as e:
             return JsonResponse({"detail": "Token Expiré veuillez refresh",
                                  "code": settings.CUSTOM_ERRORS_TEXT['REFRESH_TOKEN']},
                                 status=AuthenticationFailed.status_code)

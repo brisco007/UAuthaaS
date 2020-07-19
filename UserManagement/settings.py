@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,17 +40,25 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users_crud',
     'request_aa',
+    'product_ass',
+    'journalling.apps.JournallingConfig',
+    'biling_and_payment.apps.BilingAndPaymentConfig',
     'rest_framework',
+
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',    
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # 'corsheaders.middleware.CorsMiddleware'
 
     'request_aa.middlewares.authentication.AuthentificationMiddleware',
     'request_aa.middlewares.autorization.AuthorizationMiddleware',
@@ -144,6 +153,8 @@ KEYCLOAK_BEARER_AUTHENTICATION_EXEMPT_PATHS = [
     'admin',
     'auth',
     'refresh',
+    'accounting',
+    'journalling',
 ]
 
 KEYCLOAK_USER_AUTHORIZATION_EXEMPT_PATHS = [
@@ -151,6 +162,9 @@ KEYCLOAK_USER_AUTHORIZATION_EXEMPT_PATHS = [
     'admin',
     'auth',
     'refresh',
+    'services',
+    'accounting',
+    'journalling',
 ]
 
 ACCESS_REQUEST_PATH = "access"
@@ -194,3 +208,11 @@ CUSTOM_ERRORS_TEXT = {
     'AUTORIZATION_FAILLED' : 'AUTORIZATION_FAILLED',
     'AUTHENTIFICATION_FAILLED' : 'AUTHENTIFICATION_FAILLED'
 }
+
+
+
+# CORS_ORIGIN_WHITELIST = (
+#      'http://192.168.8.189:3000',
+# )
+
+CORS_ORIGIN_ALLOW_ALL = True

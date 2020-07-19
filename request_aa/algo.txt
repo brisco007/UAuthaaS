@@ -1,0 +1,51 @@
+Authentification 
+
+
+
+variable URL_LIBRE ;
+fonction authentification(requete)
+    url = requete.url
+    si url est dans URL_LIBRE alors
+        laisser_passer_la_requete
+    sinon
+        si le token d'authentification n'est pas dans l'entete de la requete alors
+            si la requete n'est de type text/html et le parametre init absent dans la requete alors
+                renvoyer un code d'erreur
+            sinon 
+                token = extraire_token(requete) ou parametre init de la requete
+
+                essayer
+                    utilisateur = extraire_utilisateur_depuis_keycloak(token)
+                    requete.utilisateur = utilisateur
+                si erreur connection ou format incorect de token alors
+                    renvoyer erreur
+                si erreur authentification_error alors
+                    renvoyer au client de rafraichir le token
+        laisser_passer_la_requete
+
+
+
+authorization 
+
+
+
+variable URL_GRATUITS;
+fonction authentification(requete)
+    url = requete.url
+    si url est dans URL_GRATUITS alors
+        laisser_passer_la_requete
+    sinon
+        si le utilisateur dans la requete alors
+            si utilisateur a en compte alors
+                signer la requete et laisser passer
+            sinon 
+                renvoyer une erreur_pour que l'utilisateur souscrive à un forfait
+        sinon
+            renvoyer erreur car requete non authentifié
+           
+        laisser_passer_la_requete
+
+
+        
+
+

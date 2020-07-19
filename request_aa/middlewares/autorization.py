@@ -10,7 +10,7 @@ from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
 import json
 import datetime
 import base64
-from .fake import user_authorize
+from biling_and_payment.audit.tools import AuthorizationByAccountingTools
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ class AuthorizationMiddleware:
 
         auth_user = request.authUser
 
-        if user_authorize(auth_user):
+        if AuthorizationByAccountingTools.isTheUserAuthorized(auth_user['sub']):
             authorization_token_str = self.client_id + \
                 "&" + datetime.datetime.now().isoformat()
             authorization_token = base64.b64encode(
